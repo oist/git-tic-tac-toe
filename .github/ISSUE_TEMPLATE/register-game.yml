@@ -1,0 +1,42 @@
+name: Pair Game Registration
+description: Register your pair repository with one workshop Game Wall
+title: "[Game Registration]: "
+labels: ["game-registration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Register your pair repository
+        Submit one registration for your repository and workshop. The Game Wall discovers every branch whose name begins with the lowercase prefix `match` and reads `BOARD.txt` from each matching branch. A repository can belong to only one workshop.
+  - type: input
+    id: workshop_id
+    attributes:
+      label: Workshop ID
+      description: Use the stable ID from the workshop-specific registration link.
+      placeholder: 2026-11-06-sokedai
+    validations:
+      required: true
+  - type: input
+    id: repo_url
+    attributes:
+      label: Repository URL
+      description: Full URL to your pair's public GitHub repository.
+      placeholder: https://github.com/username/repository
+    validations:
+      required: true
+  - type: input
+    id: player_x
+    attributes:
+      label: Player X Handle
+      description: GitHub username for Player X (with or without @).
+      placeholder: octocat
+    validations:
+      required: true
+  - type: input
+    id: player_o
+    attributes:
+      label: Player O Handle
+      description: GitHub username for Player O (with or without @).
+      placeholder: hubot
+    validations:
+      required: true

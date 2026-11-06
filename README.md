@@ -1,117 +1,91 @@
-# Git Tic-Tac-Toe Template
+# Git Tic-Tac-Toe Workshop
 
-A paired collaboration game. You and your partner play tic-tac-toe by committing and pushing moves to a shared GitHub repository.
+This two-hour workshop teaches collaborative Git through a paired tic-tac-toe game. Learners make and review commits together, then repeat the board-edit workflow with Copilot making the edit they previously made by hand.
 
-![Git Tic-Tac-Toe Turn Cycle](images/workflow.svg)
+## Workshop documents
 
----
+- [Design history](WORKSHOP_DESIGN_HANDOFF.md) (historical record; the guides below are current)
+- [Local delivery status and blockers](planning/delivery-status-2026-10-20.md)
+- [Learner guide](LEARNER_GUIDE.md) and [How to play](docs/guide.html)
+- [Time machine](TIME_MACHINE.md) take-home page ([web version](docs/time-machine.html))
+- [Facilitator guide](FACILITATOR_GUIDE.md), which holds the only copy of the agenda
+- [Pre-session checklist](PRE_SESSION_CHECK.md) and [Setup page](docs/setup.html)
+- [Rehearsal guide](REHEARSAL_GUIDE.md)
+- [Survey text](SURVEY.md). The [SOKENDAI survey](https://forms.gle/eo9pgChEGpdvdcQ67) is live; its link is the `surveyUrl` in the catalog.
+- [Game Wall](docs/wall.html)
+- [Site mode setting](docs/site-config.js)
+- [Capture pipeline](scripts/capture/README.md)
+- [Glossary](GLOSSARY.md)
 
-## Initial Setup
+## Workshop links
 
-Decide who is **Player X** (first mover) and who is **Player O** (collaborator).
+The plain site URL follows the single `setupOnly` setting in [`docs/site-config.js`](docs/site-config.js): when true, it opens Setup; when false, it opens the Game Wall. Open [`docs/wall.html`](docs/wall.html) directly for the Game Wall. The default workshop is SOKENDAI (2026-11-06); SCDA Training Week is archived. Use a workshop-specific `?workshop=<id>` link to select an event.
 
-### Player X (Host / First Mover)
+The shared event context on the Game Wall, Setup page, and How to play reads event names, ISO dates, status, registration links, and optional `note` text from [`docs/workshops.json`](docs/workshops.json). Each workshop may also set `setupTrack` (`"codespaces"` or `"local"`) and `surveyUrl`. Change the catalog's `defaultWorkshopId` to designate a different plain-URL default; stable workshop links continue using their own `?workshop=<id>` value.
 
-1. Click **Use this template** > **Create a new repository**.
-2. Go to **Settings** > **Collaborators** > **Add people**, and invite **Player O** by their GitHub handle.
-3. [Register your game](https://github.com/igorsdub/git-tic-tac-toe-workshop/issues/new?template=register-game.yml) to display your board on the workshop Game Wall.
-4. Clone the repository locally:
-   ```bash
-   git clone <your-repo-url>
-   cd <repo-folder>
-   ```
-5. You are ready to make Move 1!
+| Workshop | Game Wall | Register a pair repository |
+|---|---|---|
+| SCDA Training Week (2026-10-01) | [Game Wall](https://oist.github.io/git-tic-tac-toe/wall.html?workshop=2026-10-01-scda) | [Registration form](https://github.com/oist/git-tic-tac-toe/issues/new?template=register-game.yml&workshop_id=2026-10-01-scda) |
+| SOKENDAI (2026-11-06) | [Game Wall](https://oist.github.io/git-tic-tac-toe/wall.html?workshop=2026-11-06-sokedai) | [Registration form](https://github.com/oist/git-tic-tac-toe/issues/new?template=register-game.yml&workshop_id=2026-11-06-sokedai) |
+| RIKEN (2026-11-10) | [Game Wall](https://oist.github.io/git-tic-tac-toe/wall.html?workshop=2026-11-10-riken) | [Registration form](https://github.com/oist/git-tic-tac-toe/issues/new?template=register-game.yml&workshop_id=2026-11-10-riken) |
 
-### Player O (Collaborator / Second Mover)
+## Staged learner path
 
-1. Accept the invitation via email or [GitHub notifications](https://github.com/notifications).
-2. Clone the repository locally:
-   ```bash
-   git clone <repo-url>
-   cd <repo-folder>
-   ```
-3. Wait for Player X to push Move 1. Once they tell you *"Your turn!"*, begin your turn cycle.
+In full mode, learners move through Setup (`docs/setup.html`), How to play (`docs/guide.html`), and the Game Wall (`docs/wall.html`) using the stage strip, which ends with **Register repository**. In setup-only mode, the strip, registration controls, and onward links are hidden across all three pages; the plain site URL opens Setup. Set `setupOnly` to `false` in `docs/site-config.js` to restore full mode.
 
----
+The Setup page adapts to the selected workshop (`?workshop=<id>`):
 
-## The Turn Cycle
+- **Archived** (for example SCDA Training Week): archived workshops are omitted from the workshop selector.
+- **`setupTrack: "codespaces"`** (SOKENDAI and RIKEN): the step-by-step Codespaces track with screenshots, per-step checkboxes remembered in the browser, and the workshop's `surveyUrl` when set.
+- A workshop with no `setupTrack` shows "Setup for this workshop is not published yet".
 
-Every turn follows these five steps in exact order. **Always pull before editing!**
+In full mode, use **Register repository** in the stage strip to open the selected workshop's registration form.
 
-### 1. PULL the latest move
-```bash
-git pull origin main
+## How to run tests
+
+```
+npm test
 ```
 
-### 2. EDIT `board.txt`
-Open `board.txt` in your text editor. Replace **one** empty square (`[ ]`) with your mark (`[X]` or `[O]`), then save the file.
+Without npm:
 
-### 3. STAGE your change
-Verify your diff and stage `board.txt`:
-```bash
-git status
-git diff
-git add board.txt
+```
+node --test tests/*.cjs tests/*.js
+python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-### 4. COMMIT with a clear message
-```bash
-git commit -m "Move 1: X in center square"
-```
+The DOM tests (`tests/test_dashboard_dom.cjs`, `tests/test_setup_dom.cjs`, `tests/test_site_mode_dom.cjs`) need Chrome or Chromium and are skipped if none is found. Set `CHROMIUM_BIN` to point at a specific binary.
 
-### 5. PUSH to GitHub
-```bash
-git push origin main
-```
-Tell your partner: **"Your turn!"**
+## Local preview
 
----
+Run `npm run preview` and open [http://127.0.0.1:8765/docs/setup.html](http://127.0.0.1:8765/docs/setup.html). Set `PORT` to choose another port. This server supports byte ranges so the setup-page MP4 controls can seek during local preview.
 
-## Troubleshooting
+## Repository map
 
-- **Push Rejected (`[rejected] main -> main (fetch first)`)**:
-  Your partner pushed before you fetched. Run:
-  ```bash
-  git pull origin main
-  git push origin main
-  ```
+- [`template/`](template/README.md) is the local reference for the learner starter repository: its current `BOARD.txt`, editing conventions, and canonical empty-board example. Publish changes to the separate template repository explicitly.
+- [`scripts/`](scripts/) contains board validation, registration parsing, and registry synchronization.
+- [`scripts/capture/`](scripts/capture/README.md) is the Playwright pipeline that regenerates the Setup page's screenshots; `captures.json` there lists every step slug and screenshot name.
+- [`tests/`](tests/) covers the workshop guides, parser, Game Wall, and slides. `tests/fixtures/legacy-board/` preserves older board formats as compatibility fixtures.
+- [`docs/`](docs/) contains the Pages site. `index.html` routes according to `setupOnly`; `wall.html` is the instructor Game Wall. The separate [`docs/slides/`](docs/slides/) directory contains the workshop presentation.
 
-- **Merge Conflict in `board.txt`**:
-  Open `board.txt`, resolve the conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`), save, and run:
-  ```bash
-  git add board.txt
-  git commit -m "Resolve merge conflict in board.txt"
-  git push origin main
-  ```
+## Agenda
 
-- **Mistake or Typo**:
-  Never force push (`git push -f`). Simply fix `board.txt`, commit the fix, and push:
-  ```bash
-  git commit -am "Fix: correct square"
-  git push origin main
-  ```
+The agenda is in the [Facilitator guide](FACILITATOR_GUIDE.md#agenda-120-minutes). It is not repeated elsewhere.
 
----
+## Environment and Git workflow
 
-## Branch Rematch (Optional)
+Each learner uses their own Codespace in the browser-based VS Code editor. Each pair works in one shared public GitHub repository. Learners use VS Code's Source Control view for every turn: Pull, edit one cell and save, stage with +, Commit with a clear message, Sync Changes. The terminal is not the teaching path.
 
-Finished your match early? Play a rematch on a dedicated branch to keep your first game history intact on `main`:
+`BOARD.txt` is three rows of three single-space-separated cells (`.`, `X`, `O`); a move replaces one `.`. The manual match teaches the whole workflow. In the agent-assisted rematch, learners ask Copilot in agent mode "Place X in the center of the board" for X's first move, inspect the diff, then stage, commit, and sync the change themselves. O players and later turns name their chosen square.
 
-1. **Player X** creates and pushes the branch:
-   ```bash
-   git checkout -b rematch
-   git push -u origin rematch
-   ```
+Before the workshop, each learner creates a public repository from the template under their own account, fills in **Description**, and ticks **Include all branches** to get the template's empty `match-01`. They open it in a Codespace, run the readiness check, delete the Codespace at [github.com/codespaces](https://github.com/codespaces), and keep the repository. A running Codespace uses the limited free monthly allowance; a deleted one costs nothing. The readiness check: open Copilot Chat, type exactly "What does this repository do?", and expect an answer that mentions tic-tac-toe and `BOARD.txt`. See the [Pre-session checklist](PRE_SESSION_CHECK.md) and the [Setup page](docs/setup.html). At the session each pair chooses one prepared repository; its owner invites the partner, plays X and moves first. Both open fresh separate Codespaces, switch to `match-01`, and pull. For the rematch they create and publish `match-02` from clean `main`.
 
-2. **Player O** fetches and switches to the branch:
-   ```bash
-   git fetch origin
-   git checkout rematch
-   ```
+## Registration and delivery status
 
-3. Reset `board.txt` back to empty squares (`[ ]`), commit, and push:
-   ```bash
-   git commit -am "Start Rematch Game 2"
-   git push origin rematch
-   ```
-4. Play your rematch on the `rematch` branch!
+Each pair registers its shared repository once for the workshop and supplies both player GitHub handles. The registry discovers every lowercase `match…` branch on each successful refresh; each matching branch becomes its own Game Wall card, and the board is read from that branch. A successful registration comment confirms the repository/workshop link. A card appears after a successful refresh finds a matching branch. A repository can belong to only one workshop; use a fresh template copy for another workshop. Archived workshops remain visible and accept updates to existing repositories, including corrected handles, while rejecting new repository registrations.
+
+Existing registrations map to workshop `2026-10-01-scda`. The legacy `Default Event` record remains preserved outside workshop Game Walls pending review. The two-account rehearsal remains incomplete. See the [delivery status](planning/delivery-status-2026-10-20.md) before the workshop.
+
+## GitHub Pages deployment
+
+The Game Wall refresh workflow publishes the `docs/` directory as a GitHub Pages artifact. GitHub Pages must use the **GitHub Actions** publishing source for that workflow to deploy. The current repository setting uses the legacy `main` branch `/docs` source; commits made by the workflow with `GITHUB_TOKEN` do not trigger builds from that source. A repository administrator must make this one-time change under **Settings → Pages → Build and deployment → Source → GitHub Actions**. The workflow cannot switch an existing legacy publishing source automatically.
