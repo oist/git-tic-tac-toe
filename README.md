@@ -12,7 +12,7 @@ This two-hour workshop teaches collaborative Git through a paired tic-tac-toe ga
 - [Pre-session checklist](PRE_SESSION_CHECK.md) and [Setup page](docs/setup.html)
 - [Rehearsal guide](REHEARSAL_GUIDE.md)
 - [Survey text](SURVEY.md). The [SOKENDAI survey](https://forms.gle/eo9pgChEGpdvdcQ67) is live; its link is the `surveyUrl` in the catalog.
-- [Game Wall](docs/wall.html)
+- [Game Wall](docs/wall.html) (live registrations and matches; Setup and How to play are linked from its stage strip)
 - [Site mode setting](docs/site-config.js)
 - [Capture pipeline](scripts/capture/README.md)
 - [Glossary](GLOSSARY.md)
@@ -84,8 +84,13 @@ Before the workshop, each learner creates a public repository from the template 
 
 Each pair registers its shared repository once for the workshop and supplies both player GitHub handles. The registry discovers every lowercase `match…` branch on each successful refresh; each matching branch becomes its own Game Wall card, and the board is read from that branch. A successful registration comment confirms the repository/workshop link. A card appears after a successful refresh finds a matching branch. A repository can belong to only one workshop; use a fresh template copy for another workshop. Archived workshops remain visible and accept updates to existing repositories, including corrected handles, while rejecting new repository registrations.
 
-Existing registrations map to workshop `2026-10-01-scda`. The legacy `Default Event` record remains preserved outside workshop Game Walls pending review. The two-account rehearsal remains incomplete. See the [delivery status](planning/delivery-status-2026-10-20.md) before the workshop.
+This repository (`oist/git-tic-tac-toe`) starts with empty registry snapshots (`docs/registrations.json`, `board.json`, `registry-status.json`, `unclassified-registrations.json`); the sync workflow fills them from registration issues opened here. The two-account rehearsal remains incomplete. See the [delivery status](planning/delivery-status-2026-10-20.md) before the workshop.
 
 ## GitHub Pages deployment
 
-The Game Wall refresh workflow publishes the `docs/` directory as a GitHub Pages artifact. GitHub Pages must use the **GitHub Actions** publishing source for that workflow to deploy. The current repository setting uses the legacy `main` branch `/docs` source; commits made by the workflow with `GITHUB_TOKEN` do not trigger builds from that source. A repository administrator must make this one-time change under **Settings → Pages → Build and deployment → Source → GitHub Actions**. The workflow cannot switch an existing legacy publishing source automatically.
+The Game Wall refresh workflow (`.github/workflows/sync-registrations.yml`) publishes `docs/` as a GitHub Pages artifact, so the site is served at `https://oist.github.io/git-tic-tac-toe/`. One-time setup by a repository administrator:
+
+1. **Settings → Pages → Build and deployment → Source → GitHub Actions.** The workflow cannot switch an existing legacy `main`/`docs` source itself.
+2. **Settings → Actions → General → Workflow permissions:** allow read and write, so the workflow can commit snapshots and comment on issues. If `main` is protected, allow the Actions bot to push.
+3. Confirm the `register-game.yml` issue form exists on `main` (registration links use `template=register-game.yml&workshop_id=<id>`).
+4. Run the workflow once from **Actions → Sync Registrations to Board JSON → Run workflow** (tick *force_deploy*) and open the Game Wall.
